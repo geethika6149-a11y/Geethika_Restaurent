@@ -16,3 +16,11 @@ if not User.objects.filter(username=username).exists():
     print(f"Superuser '{username}' created successfully.")
 else:
     print(f"Superuser '{username}' already exists.")
+
+from django.core.management import call_command
+try:
+    call_command('load_sample_data')
+    print("Sample restaurant data checked/loaded successfully.")
+except Exception as e:
+    print(f"Could not load sample data: {e}")
+
