@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.id }} ({{ order.order_code }}) | Status Tracker{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-warning text-dark font-monospace fw-bold px-2 py-1">TABLE {{ order.table_number }}</span>
+                <span class="text-muted small">Placed at {{ order.created_at|date:"g:i A, M d" }}</span>
+            </div>
+            <h2 class="fw-bold mb-0">Order #{{ order.id }} <span class="text-muted">({{ order.order_code }})</span></h2>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="spinner-grow spinner-grow-sm text-warning" role="status" aria-hidden="true" id="livePollingPulse"></span>
+            <small class="text-muted fw-semibold" id="pollingStatusText">Live kitchen sync active</small>
+            <a href="{% url 'order_lookup' %}" class="btn btn-outline-secondary btn-sm rounded-pill ms-2">
+                <i class="bi bi-search me-1"></i> Check Another Order
+            </a>
+        </div>
+    </div>
+
+    <!-- Live Status Tracker Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mb-4 position-relative overflow-hidden">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="fw-bold mb-0">Order Progress</h5>
+            <span class="badge bg-{{ order.badge_color }} fs-6 px-3 py-2 rounded-pill shadow-xs" id="statusBadgeHeader">
+                <i class="bi bi-activity me-1"></i> <span id="statusTextHeader">{{ order.status }}</span>
+            </span>
+        </div>
+
+        <!-- Visual Status Stepper -->
+        <div class="tracking-stepper" id="trackingStepper">
+            <div class="tracking-stepper-progress" id="stepperProgressBar" style="width: {{ order.progress_percentage }}%;"></div>
+
+            <!-- Step 1: Received -->
+            <div class="step-node {% if order.status == 'Received' %}active{% elif order.progress_percentage >= 25 %}completed{% endif %}" id="node-received">
+                <div class="step-circle"><i class="bi bi-clipboard-check"></i></div>
+                <div class="step-label">1. Received</div>
+                <small class="text-muted" style="font-size: 0.7rem;">Kitchen notified</small>
+            </div>
+
+            <!-- Step 2: Preparing -->
+            <div class="step-node {% if order.status == 'Preparing' %}active{% elif order.progress_percentage >= 50 %}completed{% endif %}" id="node-preparing">
+                <div class="step-circle"><i class="bi bi-fire"></i></div>
+                <div class="step-label">2. Preparing</div>
+                <small class="text-muted" style="font-size: 0.7rem;">Chef cooking</small>
+            </div>
+
+            <!-- Step 3: Ready -->
+            <div class="step-node {% if order.status == 'Ready' %}active{% elif order.progress_percentage >= 75 %}completed{% endif %}" id="node-ready">
+                <div class="step-circle"><i class="bi bi-bell-fill"></i></div>
+                <div class="step-label">3. Ready</div>
+                <small class="text-muted" style="font-size: 0.7rem;">Ready to serve</small>
+            </div>
+
+            <!-- Step 4: Completed -->
+            <div class="step-node {% if order.status == 'Completed' %}completed active{% endif %}" id="node-completed">
+                <div class="step-circle"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="step-label">4. Completed</div>
+                <small class="text-muted" style="font-size: 0.7rem;">Served to table</small>
+            </div>
+        </div>
+
+        <div class="alert alert-light border rounded-3 p-3 mt-4 mb-0 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-info-circle text-primary fs-5"></i>
+                <span class="small" id="statusMessage">
+                    {% if order.status == 'Received' %}Your ticket has been sent to the chef queue and will start cooking shortly.{% elif order.status == 'Preparing' %}Our chefs are actively preparing and plating your dishes!{% elif order.status == 'Ready' %}Your meal is plated and ready for delivery to Table {{ order.table_number }}!{% else %}Order completed! Enjoy your meal.{% endif %}
+                </span>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3" onclick="checkStatusManually()">
+                <i class="bi bi-arrow-repeat me-1"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Order Items Breakdown & Table Info -->
+    <div class="row g-4">
+        <!-- Order Items Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0 fw-bold">Ticket Items</h5>
+                    <span class="badge bg-secondary rounded-pill">{{ items.count }} unique items</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Item</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-end pe-4">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                    <tr>
+                                        <td class="ps-3 py-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img src="{{ item.menu_item.image_url|default:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=150&q=80' }}" alt="{{ item.menu_item.name }}" class="rounded-3 shadow-xs" style="width: 50px; height: 50px; object-fit: cover;">
+                                                <div>
+                                                    <h6 class="fw-bold mb-0">{{ item.menu_item.name }}</h6>
+                                                    <span class="badge {% if item.menu_item.is_vegetarian %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %} rounded-pill" style="font-size: 0.68rem;">
+                                                        {% if item.menu_item.is_vegetarian %}Vegetarian{% else %}Non-Veg{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center text-muted fw-semibold">${{ item.price }}</td>
+                                        <td class="text-center fw-bold">{{ item.quantity }}</td>
+                                        <td class="text-end pe-4 fw-bold">${{ item.total_price }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-light p-3 border-0">
+                    <div class="d-flex justify-content-between text-muted small mb-1">
+                        <span>Subtotal:</span>
+                        <span class="fw-semibold text-dark">${{ order.subtotal }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-muted small mb-2">
+                        <span>Tax (5%):</span>
+                        <span class="fw-semibold text-dark">${{ order.tax }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between fs-5 fw-bold text-dark border-top pt-2">
+                        <span>Grand Total:</span>
+                        <span class="text-warning-emphasis">${{ order.total_amount }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer & Table Sidebar -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-3">
+                <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 0.05em;">
+                    <i class="bi bi-person-badge me-1"></i> Customer Information
+                </h6>
+                <div class="mb-2">
+                    <small class="text-muted d-block">Customer Name</small>
+                    <span class="fw-bold">{{ order.customer_name }}</span>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted d-block">Contact Phone</small>
+                    <span class="fw-bold font-monospace">{{ order.customer_phone }}</span>
+                </div>
+                {% if order.customer_email %}
+                    <div class="mb-2">
+                        <small class="text-muted d-block">Email</small>
+                        <span>{{ order.customer_email }}</span>
+                    </div>
+                {% endif %}
+                <div class="mb-2">
+                    <small class="text-muted d-block">Table Assignment</small>
+                    <span class="badge bg-warning text-dark font-monospace fs-6">Table #{{ order.table_number }}</span>
+                </div>
+
+                {% if order.special_instructions %}
+                    <div class="mt-3 pt-3 border-top">
+                        <small class="text-muted d-block mb-1">Special Instructions</small>
+                        <div class="p-2 bg-light rounded-3 small text-secondary">
+                            "{{ order.special_instructions }}"
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick Action for Staff Testing -->
+            <div class="card border-0 bg-dark text-white rounded-4 p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <small class="text-warning fw-bold text-uppercase" style="font-size: 0.75rem;">Staff Shortcut</small>
+                    <i class="bi bi-gear-wide-connected text-warning"></i>
+                </div>
+                <p class="small text-light opacity-75 mb-2">
+                    Need to simulate kitchen status updates? Open the Kitchen KDS dashboard in another tab.
+                </p>
+                <a href="{% url 'kitchen_dashboard' %}" target="_blank" class="btn btn-warning btn-sm rounded-pill fw-bold">
+                    Open Kitchen Dashboard <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const orderIdentifier = "{{ order.order_code }}";
+    const statusApiUrl = "{% url 'api_order_status' order.order_code %}";
+
+    async function checkStatusManually() {
+        try {
+            const resp = await fetch(statusApiUrl);
+            if (resp.ok) {
+                const data = await resp.json();
+                updateTrackerUI(data);
+            }
+        } catch (e) {
+            console.error("Status check failed", e);
+        }
+    }
+
+    function updateTrackerUI(data) {
+        const status = data.status;
+        const progress = data.progress_percentage;
+        const badgeColor = data.badge_color;
+
+        // Header badge
+        const badgeHeader = document.getElementById('statusBadgeHeader');
+        const textHeader = document.getElementById('statusTextHeader');
+        if (badgeHeader && textHeader) {
+            badgeHeader.className = `badge bg-${badgeColor} fs-6 px-3 py-2 rounded-pill shadow-xs`;
+            textHeader.textContent = status;
+        }
+
+        // Stepper progress line
+        const progressBar = document.getElementById('stepperProgressBar');
+        if (progressBar) progressBar.style.width = `${progress}%`;
+
+        // Node states
+        const nodes = {
+            'Received': document.getElementById('node-received'),
+            'Preparing': document.getElementById('node-preparing'),
+            'Ready': document.getElementById('node-ready'),
+            'Completed': document.getElementById('node-completed')
+        };
+
+        const statuses = ['Received', 'Preparing', 'Ready', 'Completed'];
+        const currentIndex = statuses.indexOf(status);
+
+        statuses.forEach((s, idx) => {
+            const node = nodes[s];
+            if (!node) return;
+            node.classList.remove('active', 'completed');
+            if (idx < currentIndex) {
+                node.classList.add('completed');
+            } else if (idx === currentIndex) {
+                node.classList.add('active');
+                if (status === 'Completed') node.classList.add('completed');
+            }
+        });
+
+        // Update message text
+        const msgEl = document.getElementById('statusMessage');
+        if (msgEl) {
+            if (status === 'Received') msgEl.textContent = 'Your ticket has been sent to the chef queue and will start cooking shortly.';
+            else if (status === 'Preparing') msgEl.textContent = 'Our chefs are actively preparing and plating your dishes!';
+            else if (status === 'Ready') msgEl.textContent = `Your meal is plated and ready for delivery to Table {{ order.table_number }}!`;
+            else if (status === 'Completed') msgEl.textContent = 'Order completed! Enjoy your meal.';
+        }
+    }
+
+    // Auto-poll status every 4 seconds
+    setInterval(checkStatusManually, 4000);
+</script>
+{% endblock %}

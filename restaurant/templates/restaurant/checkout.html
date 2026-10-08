@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout | GourmetOS Smart Restaurant{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1"><i class="bi bi-credit-card-2-front text-warning me-2"></i> Table Checkout</h2>
+        <p class="text-muted mb-0">Enter your details and table number to send your ticket directly to the chef's screen.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Customer Details Form -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                    <span class="badge bg-warning text-dark rounded-circle p-2" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">1</span>
+                    Customer & Table Details
+                </h4>
+
+                <form method="POST" action="{% url 'checkout' %}" id="checkoutForm">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="id_customer_name" class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
+                            {{ form.customer_name }}
+                            {% if form.customer_name.errors %}
+                                <div class="text-danger small mt-1">{{ form.customer_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="id_customer_phone" class="form-label fw-semibold small">Phone Number <span class="text-danger">*</span></label>
+                            {{ form.customer_phone }}
+                            {% if form.customer_phone.errors %}
+                                <div class="text-danger small mt-1">{{ form.customer_phone.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="id_customer_email" class="form-label fw-semibold small">Email Address</label>
+                            {{ form.customer_email }}
+                            {% if form.customer_email.errors %}
+                                <div class="text-danger small mt-1">{{ form.customer_email.errors.0 }}</div>
+                            {% endif %}
+                            <small class="text-muted" style="font-size: 0.78rem;">Optional: For digital receipt copy.</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="id_table_number" class="form-label fw-semibold small">Table Number (1 - 50) <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-geo-fill"></i></span>
+                                {{ form.table_number }}
+                            </div>
+                            {% if form.table_number.errors %}
+                                <div class="text-danger small mt-1">{{ form.table_number.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="id_special_instructions" class="form-label fw-semibold small">Kitchen Special Requests / Allergies</label>
+                            {{ form.special_instructions }}
+                            <small class="text-muted" style="font-size: 0.78rem;">e.g., "No nuts", "Dressing on the side", "Extra crispy fries".</small>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top d-flex align-items-center justify-content-between">
+                        <a href="{% url 'cart' %}" class="btn btn-outline-secondary rounded-pill btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i> Return to Cart
+                        </a>
+                        <button type="submit" class="btn btn-warning btn-lg rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2" id="btnPlaceOrder">
+                            <i class="bi bi-send-check-fill"></i>
+                            <span>Send Order to Kitchen</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Summary Column -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-3 d-flex align-items-center justify-content-between">
+                    <span>Order Review</span>
+                    <span class="badge bg-secondary rounded-pill">{{ cart.total_count }} items</span>
+                </h5>
+
+                <div class="list-group list-group-flush mb-3 overflow-y-auto" style="max-height: 280px;">
+                    {% for item in cart.items %}
+                        <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center border-bottom border-light">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-warning-subtle text-dark border px-2 py-1 fw-bold">{{ item.quantity }}x</span>
+                                <div>
+                                    <div class="fw-semibold small">{{ item.menu_item.name }}</div>
+                                    <small class="text-muted">${{ item.menu_item.price }} each</small>
+                                </div>
+                            </div>
+                            <span class="fw-bold small">${{ item.line_total }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="border-top pt-3">
+                    <div class="d-flex justify-content-between text-muted small mb-2">
+                        <span>Food Subtotal:</span>
+                        <span class="fw-semibold text-dark">${{ cart.subtotal }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-muted small mb-3">
+                        <span>Applicable Tax (5%):</span>
+                        <span class="fw-semibold text-dark">${{ cart.tax }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center border-top pt-2">
+                        <span class="fs-5 fw-bold">Grand Total:</span>
+                        <span class="fs-4 fw-bold text-warning-emphasis">${{ cart.grand_total }}</span>
+                    </div>
+                </div>
+
+                <div class="alert alert-light border mt-4 mb-0 rounded-3 small text-muted">
+                    <i class="bi bi-shield-check text-success me-1"></i> <strong>Server-Verified Pricing:</strong> Prices and tax are validated securely on the Django server before order confirmation.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // When submitting checkout, clear localStorage cart so it resets upon redirect
+    document.getElementById('checkoutForm')?.addEventListener('submit', () => {
+        if (window.gourmetCart) {
+            window.gourmetCart.clearCart();
+        } else {
+            localStorage.removeItem('gourmet_cart_v1');
+        }
+    });
+</script>
+{% endblock %}
