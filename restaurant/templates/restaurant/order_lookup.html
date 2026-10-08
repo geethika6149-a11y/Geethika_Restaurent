@@ -7,8 +7,8 @@
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-8 text-center mb-4">
-            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning px-3 py-1 rounded-pill fw-bold mb-2">
-                <i class="bi bi-broadcast me-1"></i> LIVE ORDER TRACKING
+            <span class="badge bg-mint-subtle text-mint-dark border border-mint px-3 py-1 rounded-pill fw-bold mb-2">
+                <i class="bi bi-broadcast me-1 text-mint"></i> LIVE ORDER TRACKING
             </span>
             <h1 class="display-6 fw-bold mb-2">Track Your Table Order</h1>
             <p class="text-muted">Enter your Order ID or tracking code to monitor real-time kitchen progress.</p>
@@ -22,8 +22,8 @@
                         <label for="id_order_identifier" class="form-label fw-bold text-dark">Order ID or Ticket Code</label>
                         {{ form.order_identifier }}
                     </div>
-                    <button type="submit" class="btn btn-warning btn-lg rounded-pill w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
-                        <i class="bi bi-search"></i>
+                    <button type="submit" class="btn btn-primary-gradient btn-lg rounded-pill w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-search text-mint"></i>
                         <span>Find & Track Order</span>
                     </button>
                 </form>
@@ -33,7 +33,7 @@
             {% if recent_orders %}
                 <div class="card border-0 bg-light rounded-4 p-4">
                     <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.78rem; letter-spacing: 0.05em;">
-                        <i class="bi bi-clock-history me-1"></i> Quick Access: Recent Orders
+                        <i class="bi bi-clock-history me-1 text-primary"></i> Quick Access: Recent Orders
                     </h6>
                     <div class="list-group list-group-flush rounded-3">
                         {% for ord in recent_orders %}
@@ -43,7 +43,7 @@
                                     <div class="small text-muted">{{ ord.customer_name }} • ${{ ord.total_amount }}</div>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="badge bg-{{ ord.badge_color }} rounded-pill">{{ ord.status }}</span>
+                                    <span class="badge {% if ord.status == 'Completed' %}bg-success{% elif ord.status == 'Ready' %}bg-primary{% elif ord.status == 'Preparing' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-1">{{ ord.status }}</span>
                                     <i class="bi bi-chevron-right text-muted small"></i>
                                 </div>
                             </a>

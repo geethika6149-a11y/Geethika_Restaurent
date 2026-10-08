@@ -8,13 +8,13 @@
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <div class="d-flex align-items-center gap-2 mb-1">
-                <span class="badge bg-warning text-dark font-monospace fw-bold px-2 py-1">TABLE {{ order.table_number }}</span>
+                <span class="badge bg-dark text-mint font-monospace fw-bold px-3 py-1 border border-mint rounded-pill">TABLE {{ order.table_number }}</span>
                 <span class="text-muted small">Placed at {{ order.created_at|date:"g:i A, M d" }}</span>
             </div>
             <h2 class="fw-bold mb-0">Order #{{ order.id }} <span class="text-muted">({{ order.order_code }})</span></h2>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <span class="spinner-grow spinner-grow-sm text-warning" role="status" aria-hidden="true" id="livePollingPulse"></span>
+            <span class="spinner-grow spinner-grow-sm text-success" role="status" aria-hidden="true" id="livePollingPulse"></span>
             <small class="text-muted fw-semibold" id="pollingStatusText">Live kitchen sync active</small>
             <a href="{% url 'order_lookup' %}" class="btn btn-outline-secondary btn-sm rounded-pill ms-2">
                 <i class="bi bi-search me-1"></i> Check Another Order
@@ -26,12 +26,12 @@
     <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mb-4 position-relative overflow-hidden">
         <div class="d-flex align-items-center justify-content-between mb-3">
             <h5 class="fw-bold mb-0">Order Progress</h5>
-            <span class="badge bg-{{ order.badge_color }} fs-6 px-3 py-2 rounded-pill shadow-xs" id="statusBadgeHeader">
+            <span class="badge {% if order.status == 'Completed' %}bg-success{% elif order.status == 'Ready' %}bg-primary{% elif order.status == 'Preparing' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %} fs-6 px-3 py-2 rounded-pill shadow-xs" id="statusBadgeHeader">
                 <i class="bi bi-activity me-1"></i> <span id="statusTextHeader">{{ order.status }}</span>
             </span>
         </div>
 
-        <!-- Visual Status Stepper -->
+        <!-- Visual Status Stepper (Indigo to Mint Gradient) -->
         <div class="tracking-stepper" id="trackingStepper">
             <div class="tracking-stepper-progress" id="stepperProgressBar" style="width: {{ order.progress_percentage }}%;"></div>
 
@@ -64,14 +64,14 @@
             </div>
         </div>
 
-        <div class="alert alert-light border rounded-3 p-3 mt-4 mb-0 d-flex align-items-center justify-content-between">
+        <div class="alert alert-light border border-indigo-subtle rounded-3 p-3 mt-4 mb-0 d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
                 <i class="bi bi-info-circle text-primary fs-5"></i>
                 <span class="small" id="statusMessage">
                     {% if order.status == 'Received' %}Your ticket has been sent to the chef queue and will start cooking shortly.{% elif order.status == 'Preparing' %}Our chefs are actively preparing and plating your dishes!{% elif order.status == 'Ready' %}Your meal is plated and ready for delivery to Table {{ order.table_number }}!{% else %}Order completed! Enjoy your meal.{% endif %}
                 </span>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3" onclick="checkStatusManually()">
+            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="checkStatusManually()">
                 <i class="bi bi-arrow-repeat me-1"></i> Refresh
             </button>
         </div>
@@ -84,7 +84,7 @@
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h5 class="mb-0 fw-bold">Ticket Items</h5>
-                    <span class="badge bg-secondary rounded-pill">{{ items.count }} unique items</span>
+                    <span class="badge bg-indigo-subtle text-primary border border-indigo-subtle rounded-pill" style="background: #eef2ff;">{{ items.count }} unique items</span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -113,7 +113,7 @@
                                         </td>
                                         <td class="text-center text-muted fw-semibold">${{ item.price }}</td>
                                         <td class="text-center fw-bold">{{ item.quantity }}</td>
-                                        <td class="text-end pe-4 fw-bold">${{ item.total_price }}</td>
+                                        <td class="text-end pe-4 fw-bold text-dark">${{ item.total_price }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -131,7 +131,7 @@
                     </div>
                     <div class="d-flex justify-content-between fs-5 fw-bold text-dark border-top pt-2">
                         <span>Grand Total:</span>
-                        <span class="text-warning-emphasis">${{ order.total_amount }}</span>
+                        <span class="text-primary fw-bold">${{ order.total_amount }}</span>
                     </div>
                 </div>
             </div>
@@ -141,7 +141,7 @@
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-3">
                 <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 0.05em;">
-                    <i class="bi bi-person-badge me-1"></i> Customer Information
+                    <i class="bi bi-person-badge me-1 text-primary"></i> Customer Information
                 </h6>
                 <div class="mb-2">
                     <small class="text-muted d-block">Customer Name</small>
@@ -159,7 +159,7 @@
                 {% endif %}
                 <div class="mb-2">
                     <small class="text-muted d-block">Table Assignment</small>
-                    <span class="badge bg-warning text-dark font-monospace fs-6">Table #{{ order.table_number }}</span>
+                    <span class="badge bg-mint text-white font-monospace fs-6 px-3 py-1 rounded-pill">Table #{{ order.table_number }}</span>
                 </div>
 
                 {% if order.special_instructions %}
@@ -173,15 +173,15 @@
             </div>
 
             <!-- Quick Action for Staff Testing -->
-            <div class="card border-0 bg-dark text-white rounded-4 p-3 shadow-sm">
+            <div class="card border-0 bg-dark text-white rounded-4 p-3 shadow-sm border border-secondary border-opacity-25">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <small class="text-warning fw-bold text-uppercase" style="font-size: 0.75rem;">Staff Shortcut</small>
-                    <i class="bi bi-gear-wide-connected text-warning"></i>
+                    <small class="text-mint fw-bold text-uppercase" style="font-size: 0.75rem;">Staff Shortcut</small>
+                    <i class="bi bi-gear-wide-connected text-mint"></i>
                 </div>
                 <p class="small text-light opacity-75 mb-2">
-                    Need to simulate kitchen status updates? Open the Kitchen KDS dashboard in another tab.
+                    Simulate kitchen status updates by opening the Kitchen KDS dashboard in another tab.
                 </p>
-                <a href="{% url 'kitchen_dashboard' %}" target="_blank" class="btn btn-warning btn-sm rounded-pill fw-bold">
+                <a href="{% url 'kitchen_dashboard' %}" target="_blank" class="btn btn-mint-gradient btn-sm rounded-pill fw-bold w-100">
                     Open Kitchen Dashboard <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
             </div>
@@ -210,13 +210,17 @@
     function updateTrackerUI(data) {
         const status = data.status;
         const progress = data.progress_percentage;
-        const badgeColor = data.badge_color;
 
         // Header badge
         const badgeHeader = document.getElementById('statusBadgeHeader');
         const textHeader = document.getElementById('statusTextHeader');
         if (badgeHeader && textHeader) {
-            badgeHeader.className = `badge bg-${badgeColor} fs-6 px-3 py-2 rounded-pill shadow-xs`;
+            let badgeClass = 'badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill shadow-xs';
+            if (status === 'Preparing') badgeClass = 'badge bg-info text-dark fs-6 px-3 py-2 rounded-pill shadow-xs';
+            else if (status === 'Ready') badgeClass = 'badge bg-primary text-white fs-6 px-3 py-2 rounded-pill shadow-xs';
+            else if (status === 'Completed') badgeClass = 'badge bg-success text-white fs-6 px-3 py-2 rounded-pill shadow-xs';
+            
+            badgeHeader.className = badgeClass;
             textHeader.textContent = status;
         }
 

@@ -4,20 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Smart Restaurant Food Ordering & Kitchen Dashboard{% endblock %}</title>
-    <meta name="description" content="Modern full-stack restaurant food ordering portal with dynamic cart and live kitchen status dashboard.">
+    <title>{% block title %}GourmetOS | Modern Smart Restaurant & Kitchen Dashboard{% endblock %}</title>
+    <meta name="description" content="Contemporary full-stack restaurant food ordering portal with dynamic cart and real-time kitchen status dashboard.">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
-    <!-- Custom CSS -->
+    <!-- Custom CSS: Modern Indigo & Fresh Mint -->
     <link rel="stylesheet" href="{% static 'restaurant/css/style.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
@@ -27,9 +27,11 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top glass-nav py-3" id="mainNavbar">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'menu' %}" id="brandLogo">
-                    <span class="brand-icon"><i class="bi bi-fire text-warning"></i></span>
-                    <span class="fw-bold tracking-tight brand-text">Gourmet<span class="text-warning">OS</span></span>
-                    <span class="badge bg-warning text-dark ms-1 d-none d-sm-inline-block font-monospace" style="font-size: 0.65rem;">SMART POS</span>
+                    <span class="brand-icon">
+                        <i class="bi bi-stars text-mint fs-5"></i>
+                    </span>
+                    <span class="brand-text text-white">Gourmet<span class="text-mint">OS</span></span>
+                    <span class="badge bg-indigo-subtle text-light border border-indigo-subtle ms-1 d-none d-sm-inline-block font-monospace" style="font-size: 0.65rem; background: rgba(99, 102, 241, 0.25);">SMART POS</span>
                 </a>
 
                 <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,29 +51,29 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-warning-emphasis {% if 'kitchen' in request.path %}active{% endif %}" href="{% url 'kitchen_dashboard' %}" id="navKitchen">
-                                <i class="bi bi-speedometer2 me-1"></i> Kitchen KDS
+                            <a class="nav-link {% if 'kitchen' in request.path %}active{% endif %}" href="{% url 'kitchen_dashboard' %}" id="navKitchen">
+                                <i class="bi bi-speedometer2 me-1 text-mint"></i> Kitchen KDS
                             </a>
                         </li>
                     </ul>
 
                     <div class="d-flex align-items-center gap-2">
-                        <!-- Search Quick Button (Desktop) -->
-                        <a href="{% url 'order_lookup' %}" class="btn btn-outline-light btn-sm rounded-pill px-3 d-none d-md-inline-flex align-items-center gap-1" id="btnQuickLookup">
-                            <i class="bi bi-search"></i>
+                        <!-- Quick Search Button -->
+                        <a href="{% url 'order_lookup' %}" class="btn btn-outline-light btn-sm rounded-pill px-3 d-none d-md-inline-flex align-items-center gap-1 border-opacity-25" id="btnQuickLookup">
+                            <i class="bi bi-search text-mint"></i>
                             <span>Find Ticket</span>
                         </a>
 
                         <!-- Offcanvas Cart Trigger -->
-                        <button type="button" class="btn btn-warning rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2 position-relative shadow-sm" id="btnCartTrigger" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                        <button type="button" class="btn btn-mint-gradient rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2 position-relative shadow-sm" id="btnCartTrigger" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
                             <i class="bi bi-bag-check-fill fs-5"></i>
                             <span class="d-none d-sm-inline">My Cart</span>
-                            <span class="badge rounded-pill bg-dark text-warning border border-warning" id="globalCartBadge">
+                            <span class="badge rounded-pill bg-white text-dark shadow-xs" id="globalCartBadge">
                                 {{ cart_summary.total_count|default:"0" }}
                             </span>
                         </button>
 
-                        <a href="/admin/" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center p-2" title="Django Admin" style="width: 38px; height: 38px;">
+                        <a href="/admin/" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center p-2 text-light border-opacity-25" title="Django Admin" style="width: 38px; height: 38px;">
                             <i class="bi bi-shield-lock"></i>
                         </a>
                     </div>
@@ -99,10 +101,10 @@
     </main>
 
     <!-- Slide-over Offcanvas Cart Drawer -->
-    <div class="offcanvas offcanvas-end shadow-lg" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="width: 420px; max-width: 95vw;">
-        <div class="offcanvas-header bg-dark text-white border-bottom border-secondary">
+    <div class="offcanvas offcanvas-end shadow-lg border-0" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="width: 420px; max-width: 95vw;">
+        <div class="offcanvas-header bg-dark text-white border-bottom border-secondary border-opacity-25 py-3">
             <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2" id="cartOffcanvasLabel">
-                <i class="bi bi-cart3 text-warning"></i> Current Cart
+                <i class="bi bi-bag-check-fill text-mint"></i> Active Cart
             </h5>
             <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
@@ -111,7 +113,7 @@
                 <i class="bi bi-bag-x text-muted display-3 mb-3"></i>
                 <h5 class="fw-bold">Your cart is empty</h5>
                 <p class="text-muted small">Select your favorite dishes from our menu to begin ordering!</p>
-                <a href="{% url 'menu' %}" class="btn btn-sm btn-outline-warning rounded-pill mt-2" data-bs-dismiss="offcanvas">Browse Menu</a>
+                <a href="{% url 'menu' %}" class="btn btn-sm btn-outline-primary rounded-pill mt-2" data-bs-dismiss="offcanvas">Browse Menu</a>
             </div>
 
             <div id="drawerCartItems" class="flex-grow-1 overflow-y-auto pe-1">
@@ -119,7 +121,7 @@
             </div>
 
             <!-- Cart Calculation Breakdown -->
-            <div class="border-top pt-3 mt-auto bg-light p-3 rounded-3 shadow-sm" id="drawerCartFooter">
+            <div class="border-top pt-3 mt-auto bg-light p-3 rounded-4 shadow-sm" id="drawerCartFooter">
                 <div class="d-flex justify-content-between text-muted small mb-1">
                     <span>Subtotal:</span>
                     <span class="fw-semibold text-dark" id="drawerSubtotal">$0.00</span>
@@ -130,15 +132,15 @@
                 </div>
                 <div class="d-flex justify-content-between fs-5 fw-bold text-dark border-top pt-2 mb-3">
                     <span>Total Amount:</span>
-                    <span class="text-warning-emphasis" id="drawerGrandTotal">$0.00</span>
+                    <span class="text-primary fw-bold" id="drawerGrandTotal">$0.00</span>
                 </div>
 
                 <div class="d-grid gap-2">
-                    <a href="{% url 'checkout' %}" class="btn btn-warning fw-bold py-2 shadow-sm rounded-pill d-flex align-items-center justify-content-center gap-2" id="drawerBtnCheckout">
+                    <a href="{% url 'checkout' %}" class="btn btn-mint-gradient fw-bold py-2 shadow-sm rounded-pill d-flex align-items-center justify-content-center gap-2" id="drawerBtnCheckout">
                         <span>Checkout Now</span>
                         <i class="bi bi-arrow-right"></i>
                     </a>
-                    <a href="{% url 'cart' %}" class="btn btn-outline-dark btn-sm rounded-pill">
+                    <a href="{% url 'cart' %}" class="btn btn-outline-secondary btn-sm rounded-pill">
                         View Detailed Cart
                     </a>
                 </div>
@@ -151,7 +153,7 @@
         <div id="liveAlertToast" class="toast align-items-center text-bg-dark border-0 shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body d-flex align-items-center gap-2" id="toastMessage">
-                    <i class="bi bi-check2-circle text-success fs-5"></i>
+                    <i class="bi bi-check2-circle text-mint fs-5"></i>
                     <span>Item added to order!</span>
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -160,12 +162,12 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white-50 py-4 mt-5 border-top border-secondary-subtle">
+    <footer class="bg-dark text-white-50 py-4 mt-5 border-top border-secondary border-opacity-25">
         <div class="container">
             <div class="row align-items-center gy-3">
                 <div class="col-md-6 text-center text-md-start">
                     <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
-                        <span class="text-warning fw-bold fs-5">GourmetOS</span>
+                        <span class="text-white fw-bold fs-5">Gourmet<span class="text-mint">OS</span></span>
                         <span class="badge bg-secondary text-light font-monospace" style="font-size: 0.7rem;">Capstone 2</span>
                     </div>
                     <p class="small text-muted mb-0">Smart Restaurant Food Ordering & Kitchen Dashboard — Django Full-Stack Project.</p>
@@ -174,10 +176,10 @@
                     <div class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 small">
                         <a href="{% url 'menu' %}" class="text-white-50 text-decoration-none hover-white">Menu</a>
                         <a href="{% url 'order_lookup' %}" class="text-white-50 text-decoration-none hover-white">Order Tracking</a>
-                        <a href="{% url 'kitchen_dashboard' %}" class="text-warning text-decoration-none hover-white">Kitchen KDS</a>
+                        <a href="{% url 'kitchen_dashboard' %}" class="text-mint text-decoration-none hover-white fw-semibold">Kitchen KDS</a>
                         <a href="/admin/" class="text-white-50 text-decoration-none hover-white">Admin</a>
                     </div>
-                    <p class="small text-muted mt-1 mb-0 font-monospace">SQLite ORM • Gunicorn • WhiteNoise • Ready for Render</p>
+                    <p class="small text-muted mt-1 mb-0 font-monospace">Modern Indigo & Fresh Mint Theme • Ready for Render</p>
                 </div>
             </div>
         </div>

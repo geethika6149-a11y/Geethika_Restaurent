@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container my-5">
     <div class="mb-4">
-        <h2 class="fw-bold mb-1"><i class="bi bi-credit-card-2-front text-warning me-2"></i> Table Checkout</h2>
+        <h2 class="fw-bold mb-1"><i class="bi bi-credit-card-2-front text-primary me-2"></i> Table Checkout</h2>
         <p class="text-muted mb-0">Enter your details and table number to send your ticket directly to the chef's screen.</p>
     </div>
 
@@ -15,7 +15,7 @@
         <div class="col-lg-7">
             <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
                 <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
-                    <span class="badge bg-warning text-dark rounded-circle p-2" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">1</span>
+                    <span class="badge bg-primary text-white rounded-circle p-2" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5, #4338ca) !important;">1</span>
                     Customer & Table Details
                 </h4>
 
@@ -51,7 +51,7 @@
                         <div class="col-md-6">
                             <label for="id_table_number" class="form-label fw-semibold small">Table Number (1 - 50) <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-geo-fill"></i></span>
+                                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-geo-fill text-mint"></i></span>
                                 {{ form.table_number }}
                             </div>
                             {% if form.table_number.errors %}
@@ -70,7 +70,7 @@
                         <a href="{% url 'cart' %}" class="btn btn-outline-secondary rounded-pill btn-sm">
                             <i class="bi bi-arrow-left me-1"></i> Return to Cart
                         </a>
-                        <button type="submit" class="btn btn-warning btn-lg rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2" id="btnPlaceOrder">
+                        <button type="submit" class="btn btn-mint-gradient btn-lg rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2" id="btnPlaceOrder">
                             <i class="bi bi-send-check-fill"></i>
                             <span>Send Order to Kitchen</span>
                         </button>
@@ -84,20 +84,20 @@
             <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
                 <h5 class="fw-bold mb-3 d-flex align-items-center justify-content-between">
                     <span>Order Review</span>
-                    <span class="badge bg-secondary rounded-pill">{{ cart.total_count }} items</span>
+                    <span class="badge bg-indigo-subtle text-primary border border-indigo-subtle rounded-pill" style="background: #eef2ff;">{{ cart.total_count }} items</span>
                 </h5>
 
                 <div class="list-group list-group-flush mb-3 overflow-y-auto" style="max-height: 280px;">
                     {% for item in cart.items %}
                         <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center border-bottom border-light">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="badge bg-warning-subtle text-dark border px-2 py-1 fw-bold">{{ item.quantity }}x</span>
+                                <span class="badge rounded-pill fw-bold" style="background: #e0e7ff; color: #4338ca;">{{ item.quantity }}x</span>
                                 <div>
                                     <div class="fw-semibold small">{{ item.menu_item.name }}</div>
                                     <small class="text-muted">${{ item.menu_item.price }} each</small>
                                 </div>
                             </div>
-                            <span class="fw-bold small">${{ item.line_total }}</span>
+                            <span class="fw-bold small text-dark">${{ item.line_total }}</span>
                         </div>
                     {% endfor %}
                 </div>
@@ -113,12 +113,12 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center border-top pt-2">
                         <span class="fs-5 fw-bold">Grand Total:</span>
-                        <span class="fs-4 fw-bold text-warning-emphasis">${{ cart.grand_total }}</span>
+                        <span class="fs-4 fw-bold text-primary">${{ cart.grand_total }}</span>
                     </div>
                 </div>
 
                 <div class="alert alert-light border mt-4 mb-0 rounded-3 small text-muted">
-                    <i class="bi bi-shield-check text-success me-1"></i> <strong>Server-Verified Pricing:</strong> Prices and tax are validated securely on the Django server before order confirmation.
+                    <i class="bi bi-shield-check text-mint me-1"></i> <strong>Server-Verified Pricing:</strong> Prices and tax are validated securely on the Django server before order confirmation.
                 </div>
             </div>
         </div>

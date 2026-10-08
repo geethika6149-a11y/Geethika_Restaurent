@@ -6,14 +6,8 @@
 {% block extra_css %}
 <style>
     body {
-        background-color: #0b1120;
+        background-color: var(--slate-dark);
         color: #f1f5f9;
-    }
-    .kds-stat-card {
-        background: #1e293b;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 1rem;
-        padding: 1.25rem;
     }
 </style>
 {% endblock %}
@@ -25,20 +19,20 @@
         <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3 border-bottom border-secondary border-opacity-25 pb-3">
             <div>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-danger text-light font-monospace px-2 py-1">KITCHEN KDS</span>
-                    <span class="text-secondary small font-monospace"><i class="bi bi-clock me-1"></i> Live Ticket System</span>
+                    <span class="badge bg-mint text-dark font-monospace px-2 py-1 fw-bold">KITCHEN KDS</span>
+                    <span class="text-white-50 small font-monospace"><i class="bi bi-clock me-1"></i> Live Ticket System</span>
                 </div>
                 <h2 class="fw-bold text-white mb-0 mt-1">Kitchen Display & Order Management</h2>
             </div>
 
             <div class="d-flex align-items-center gap-3">
                 <div class="form-check form-switch d-flex align-items-center gap-2 text-white-50">
-                    <input class="form-check-input bg-warning border-0" type="checkbox" id="autoRefreshToggle" checked>
+                    <input class="form-check-input bg-success border-0" type="checkbox" id="autoRefreshToggle" checked>
                     <label class="form-check-label small" for="autoRefreshToggle">Auto-Refresh (15s)</label>
                 </div>
 
-                <a href="{% url 'kitchen_dashboard' %}?status={{ status_filter }}" class="btn btn-outline-warning btn-sm rounded-pill px-3">
-                    <i class="bi bi-arrow-clockwise me-1"></i> Refresh Now
+                <a href="{% url 'kitchen_dashboard' %}?status={{ status_filter }}" class="btn btn-outline-light btn-sm rounded-pill px-3 border-opacity-25">
+                    <i class="bi bi-arrow-clockwise me-1 text-mint"></i> Refresh Now
                 </a>
             </div>
         </div>
@@ -48,39 +42,39 @@
             <div class="col-6 col-md-4 col-xl-2">
                 <div class="kds-stat-card">
                     <span class="text-white-50 small fw-semibold text-uppercase">Active Orders</span>
-                    <h3 class="fw-bold text-warning mb-0 mt-1">{{ counts.total_active }}</h3>
+                    <h3 class="fw-bold text-white mb-0 mt-1">{{ counts.total_active }}</h3>
                 </div>
             </div>
             <div class="col-6 col-md-4 col-xl-2">
-                <div class="kds-stat-card border-warning border-opacity-50">
+                <div class="kds-stat-card" style="border-left: 4px solid #f59e0b;">
                     <span class="text-warning small fw-semibold text-uppercase"><i class="bi bi-clipboard-pulse me-1"></i> Received</span>
                     <h3 class="fw-bold text-warning mb-0 mt-1">{{ counts.received }}</h3>
                 </div>
             </div>
             <div class="col-6 col-md-4 col-xl-2">
-                <div class="kds-stat-card border-info border-opacity-50">
-                    <span class="text-info small fw-semibold text-uppercase"><i class="bi bi-fire me-1"></i> Preparing</span>
-                    <h3 class="fw-bold text-info mb-0 mt-1">{{ counts.preparing }}</h3>
+                <div class="kds-stat-card" style="border-left: 4px solid #6366f1;">
+                    <span class="text-primary-emphasis small fw-semibold text-uppercase" style="color: #a5b4fc !important;"><i class="bi bi-fire me-1"></i> Preparing</span>
+                    <h3 class="fw-bold mb-0 mt-1" style="color: #a5b4fc;">{{ counts.preparing }}</h3>
                 </div>
             </div>
             <div class="col-6 col-md-4 col-xl-2">
-                <div class="kds-stat-card border-primary border-opacity-50">
-                    <span class="text-primary small fw-semibold text-uppercase"><i class="bi bi-bell-fill me-1"></i> Ready</span>
-                    <h3 class="fw-bold text-primary mb-0 mt-1">{{ counts.ready }}</h3>
+                <div class="kds-stat-card" style="border-left: 4px solid #06b6d4;">
+                    <span class="text-info small fw-semibold text-uppercase"><i class="bi bi-bell-fill me-1"></i> Ready</span>
+                    <h3 class="fw-bold text-info mb-0 mt-1">{{ counts.ready }}</h3>
                 </div>
             </div>
             <div class="col-6 col-md-4 col-xl-2">
-                <div class="kds-stat-card border-success border-opacity-50">
-                    <span class="text-success small fw-semibold text-uppercase"><i class="bi bi-check-circle-fill me-1"></i> Completed</span>
-                    <h3 class="fw-bold text-success mb-0 mt-1">{{ counts.completed }}</h3>
+                <div class="kds-stat-card" style="border-left: 4px solid #10b981;">
+                    <span class="text-mint small fw-semibold text-uppercase"><i class="bi bi-check-circle-fill me-1"></i> Completed</span>
+                    <h3 class="fw-bold text-mint mb-0 mt-1">{{ counts.completed }}</h3>
                 </div>
             </div>
             <div class="col-6 col-md-4 col-xl-2">
-                <div class="kds-stat-card bg-secondary bg-opacity-25">
-                    <span class="text-white-50 small fw-semibold text-uppercase">Quick Action</span>
+                <div class="kds-stat-card bg-dark bg-opacity-50">
+                    <span class="text-white-50 small fw-semibold text-uppercase">New Order</span>
                     <div class="mt-2">
-                        <a href="{% url 'menu' %}" target="_blank" class="btn btn-sm btn-outline-light rounded-pill w-100" style="font-size: 0.75rem;">
-                            + New Table Order
+                        <a href="{% url 'menu' %}" target="_blank" class="btn btn-sm btn-outline-light rounded-pill w-100 border-opacity-25" style="font-size: 0.75rem;">
+                            + Add Table Ticket
                         </a>
                     </div>
                 </div>
@@ -91,32 +85,32 @@
         <div class="mb-4">
             <ul class="nav nav-pills gap-2">
                 <li class="nav-item">
-                    <a class="nav-link {% if status_filter == 'active' %}active bg-warning text-dark fw-bold{% else %}text-light bg-dark{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=active">
+                    <a class="nav-link {% if status_filter == 'active' %}active btn-primary-gradient fw-bold{% else %}text-light bg-dark bg-opacity-75{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=active">
                         Active Queue ({{ counts.total_active }})
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if status_filter == 'Received' %}active bg-warning text-dark fw-bold{% else %}text-light bg-dark{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=Received">
+                    <a class="nav-link {% if status_filter == 'Received' %}active btn-primary-gradient fw-bold{% else %}text-light bg-dark bg-opacity-75{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=Received">
                         Received ({{ counts.received }})
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if status_filter == 'Preparing' %}active bg-warning text-dark fw-bold{% else %}text-light bg-dark{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=Preparing">
+                    <a class="nav-link {% if status_filter == 'Preparing' %}active btn-primary-gradient fw-bold{% else %}text-light bg-dark bg-opacity-75{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=Preparing">
                         Preparing ({{ counts.preparing }})
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if status_filter == 'Ready' %}active bg-warning text-dark fw-bold{% else %}text-light bg-dark{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=Ready">
+                    <a class="nav-link {% if status_filter == 'Ready' %}active btn-primary-gradient fw-bold{% else %}text-light bg-dark bg-opacity-75{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=Ready">
                         Ready to Serve ({{ counts.ready }})
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if status_filter == 'Completed' %}active bg-warning text-dark fw-bold{% else %}text-light bg-dark{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=Completed">
+                    <a class="nav-link {% if status_filter == 'Completed' %}active btn-primary-gradient fw-bold{% else %}text-light bg-dark bg-opacity-75{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=Completed">
                         Completed ({{ counts.completed }})
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if status_filter == 'all' %}active bg-warning text-dark fw-bold{% else %}text-light bg-dark{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=all">
+                    <a class="nav-link {% if status_filter == 'all' %}active btn-primary-gradient fw-bold{% else %}text-light bg-dark bg-opacity-75{% endif %} rounded-pill px-3 py-2" href="{% url 'kitchen_dashboard' %}?status=all">
                         All Tickets
                     </a>
                 </li>
@@ -133,7 +127,7 @@
                             <div class="kds-header d-flex align-items-center justify-content-between">
                                 <span class="kds-table-badge">T-{{ order.table_number }}</span>
                                 <div class="text-end">
-                                    <span class="badge bg-{{ order.badge_color }} text-uppercase fw-bold" style="font-size: 0.72rem;">{{ order.status }}</span>
+                                    <span class="badge {% if order.status == 'Completed' %}bg-success{% elif order.status == 'Ready' %}bg-primary{% elif order.status == 'Preparing' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %} text-uppercase fw-bold rounded-pill px-2 py-1" style="font-size: 0.72rem;">{{ order.status }}</span>
                                     <div class="text-white-50 small font-monospace mt-1" style="font-size: 0.7rem;">{{ order.created_at|timesince }} ago</div>
                                 </div>
                             </div>
@@ -182,24 +176,24 @@
 
                                     <div class="d-grid gap-2">
                                         {% if order.status == 'Received' %}
-                                            <button type="submit" name="status" value="Preparing" class="btn btn-warning fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2">
-                                                <i class="bi bi-fire"></i>
+                                            <button type="submit" name="status" value="Preparing" class="btn btn-primary-gradient fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2 rounded-pill">
+                                                <i class="bi bi-fire text-warning"></i>
                                                 <span>Start Cooking (Preparing)</span>
                                             </button>
                                         {% elif order.status == 'Preparing' %}
-                                            <button type="submit" name="status" value="Ready" class="btn btn-primary fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                            <button type="submit" name="status" value="Ready" class="btn btn-info fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2 rounded-pill text-dark">
                                                 <i class="bi bi-bell-fill"></i>
                                                 <span>Mark Ready to Serve</span>
                                             </button>
                                         {% elif order.status == 'Ready' %}
-                                            <button type="submit" name="status" value="Completed" class="btn btn-success fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                            <button type="submit" name="status" value="Completed" class="btn btn-mint-gradient fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2 rounded-pill">
                                                 <i class="bi bi-check2-circle"></i>
                                                 <span>Complete & Clear Ticket</span>
                                             </button>
                                         {% else %}
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <span class="text-success small fw-bold"><i class="bi bi-check-all"></i> Order Completed</span>
-                                                <button type="submit" name="status" value="Received" class="btn btn-outline-secondary btn-sm" title="Reopen ticket">Reopen</button>
+                                                <span class="text-mint small fw-bold"><i class="bi bi-check-all"></i> Order Completed</span>
+                                                <button type="submit" name="status" value="Received" class="btn btn-outline-secondary btn-sm rounded-pill" title="Reopen ticket">Reopen</button>
                                             </div>
                                         {% endif %}
 
@@ -217,7 +211,7 @@
 
                                 <div class="text-center mt-2">
                                     <a href="{% url 'order_detail' order.order_code %}" target="_blank" class="text-white-50 text-decoration-none small hover-white" style="font-size: 0.72rem;">
-                                        Customer Tracker View <i class="bi bi-box-arrow-up-right"></i>
+                                        Customer Tracker View <i class="bi bi-box-arrow-up-right text-mint"></i>
                                     </a>
                                 </div>
                             </div>
@@ -228,11 +222,11 @@
         {% else %}
             <!-- Empty state -->
             <div class="card bg-dark border-secondary border-opacity-50 rounded-4 p-5 text-center my-5">
-                <i class="bi bi-cup-hot text-warning display-3 mb-3"></i>
+                <i class="bi bi-cup-hot text-mint display-3 mb-3"></i>
                 <h3 class="fw-bold text-white">No tickets currently in this view</h3>
                 <p class="text-white-50">All orders in "{{ status_filter }}" status have been processed or none have been placed yet.</p>
                 <div class="mt-2">
-                    <a href="{% url 'kitchen_dashboard' %}?status=all" class="btn btn-outline-warning rounded-pill px-4">
+                    <a href="{% url 'kitchen_dashboard' %}?status=all" class="btn btn-outline-light rounded-pill px-4 border-opacity-25">
                         View All Orders History
                     </a>
                 </div>

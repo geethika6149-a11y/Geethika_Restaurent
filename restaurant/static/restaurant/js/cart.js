@@ -152,10 +152,10 @@ class RestaurantCart {
         globalBadges.forEach(b => {
             b.textContent = totals.count;
             if (totals.count > 0) {
-                b.classList.add('bg-warning', 'text-dark');
+                b.classList.add('bg-white', 'text-dark');
                 b.classList.remove('bg-secondary');
             } else {
-                b.classList.remove('bg-warning', 'text-dark');
+                b.classList.remove('bg-white', 'text-dark');
                 b.classList.add('bg-secondary');
             }
         });
@@ -257,7 +257,7 @@ class RestaurantCart {
         const toastEl = document.getElementById('liveAlertToast');
         const msgEl = document.getElementById('toastMessage');
         if (toastEl && msgEl) {
-            msgEl.innerHTML = `<i class="bi bi-check2-circle text-success fs-5"></i> <span>${message}</span>`;
+            msgEl.innerHTML = `<i class="bi bi-check2-circle text-mint fs-5"></i> <span>${message}</span>`;
             const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2800 });
             toast.show();
         }
